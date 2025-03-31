@@ -620,7 +620,13 @@ URI::read(const IOOptions& io) const
 
     Content content;
 
-    if (std::filesystem::exists(full()))
+    const auto isLocalFile = [this]() -> bool
+    {
+        std::error_code errorCode{};
+        return std::filesystem::exists(full(), errorCode);
+    };
+
+    if (isLocalFile())
     {
         auto contentType = inferContentTypeFromFileExtension(full());
 
